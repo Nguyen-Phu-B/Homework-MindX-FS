@@ -1,15 +1,12 @@
 import express from "express";
-
 import router from "./routes/index.js";
-
 const app = express();
-
-const PORT = 3001;
+const port = 3000;
 
 app.use(express.json());
 
 app.use("/api/v1", router);
 
-app.listen(PORT, () => {
-    console.log(`Server listening on ${PORT}`);
+app.listen(port, () => {
+    console.log(`Example app listening on port ${port}`);
 });
