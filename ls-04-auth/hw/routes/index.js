@@ -5,10 +5,10 @@ import subjectsRouter from "./subjects.js";
 import systemStatistic from "./statis.js";
 import authRouter from "./auth.route.js";
 
-import logReq from "../middlewares/logReq.js";
-import validQuery from "../middlewares/validQuery.js";
+// import logReq from "../middlewares/logReq.js";
+// import validQuery from "../middlewares/validQuery.js";
 import countStatistic from "../middlewares/countStatistic.js";
-import authMiddleware from "../middlewares/auth.mdw.js";
+// import authMiddleware from "../middlewares/auth.mdw.js";
 
 const router = express.Router();
 
