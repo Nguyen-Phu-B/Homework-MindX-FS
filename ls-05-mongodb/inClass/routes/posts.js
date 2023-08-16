@@ -1,112 +1,116 @@
 import express from "express";
 
+import PostsController from "../controllers/posts.controller.js";
+
 import posts from "../data/post.js";
 import { v4 as uuidv4 } from "uuid";
 
 import jwt from "jsonwebtoken";
 
-// import logAPI from "../middlewares/logAPI.mdw.js";
-
 const router = express.Router();
 
-// router.use(logAPI);
+const postsController = new PostsController();
 
-router.get("/", (req, res) => {
-    const token = req.headers["x-access-token"];
+router.get("/", postsController.getPost);
+router.get("/:id", postsController.getPostId);
+router.post("/", postsController.insertPost);
 
-    if (!token) {
-        return res.status(403).json({ message: "Token is not provide" });
-    }
+// router.get("/", (req, res) => {
+//     const token = req.headers["x-access-token"];
 
-    try {
-        const decoded = jwt.verify(token, process.env.SECRET_KEY);
-    } catch (error) {
-        return res.status(403).json({ message: "Invalid token" });
-    }
+//     if (!token) {
+//         return res.status(403).json({ message: "Token is not provide" });
+//     }
 
-    res.json({
-        data: posts,
-    });
-});
+//     try {
+//         const decoded = jwt.verify(token, process.env.SECRET_KEY);
+//     } catch (error) {
+//         return res.status(403).json({ message: "Invalid token" });
+//     }
 
-router.get("/:id", (req, res) => {
-    const postId = req.params.id;
+//     res.json({
+//         data: posts,
+//     });
+// });
 
-    console.log("Get - postId", postId);
+// router.get("/:id", (req, res) => {
+//     const postId = req.params.id;
 
-    const existingPost = posts.find((post) => post.id == postId);
+//     console.log("Get - postId", postId);
 
-    if (!existingPost) {
-        return res.json({
-            message: "Post not found",
-        });
-    }
+//     const existingPost = posts.find((post) => post.id == postId);
 
-    return res.json({
-        data: existingPost,
-    });
-});
+//     if (!existingPost) {
+//         return res.json({
+//             message: "Post not found",
+//         });
+//     }
 
-router.post("/", (req, res) => {
-    const body = req.body;
+//     return res.json({
+//         data: existingPost,
+//     });
+// });
 
-    console.log("Post - Body", body);
+// router.post("/", (req, res) => {
+//     const body = req.body;
 
-    const newPost = {
-        ...body,
-        id: uuidv4(),
-    };
+//     console.log("Post - Body", body);
 
-    posts.push(newPost);
+//     const newPost = {
+//         ...body,
+//         id: uuidv4(),
+//     };
 
-    return res.json({
-        message: "Create new post successfully",
-    });
-});
+//     posts.push(newPost);
 
-router.put("/", (req, res) => {
-    const postId = req.params.id;
-    const body = req.body;
+//     return res.json({
+//         message: "Create new post successfully",
+//     });
+// });
 
-    const existingPostIndex = posts.findIndex((post) => post.id == postId);
+// router.put("/", (req, res) => {
+//     const postId = req.params.id;
+//     const body = req.body;
 
-    if (existingPostIndex === -1) {
-        return res.json({
-            message: "Post not found",
-        });
-    }
+//     const existingPostIndex = posts.findIndex((post) => post.id == postId);
 
-    const updatedPost = {
-        ...postId[existingPostIndex],
-        ...body,
-    };
+//     if (existingPostIndex === -1) {
+//         return res.json({
+//             message: "Post not found",
+//         });
+//     }
 
-    postId[existingPostIndex] = updatedPost;
+//     const updatedPost = {
+//         ...postId[existingPostIndex],
+//         ...body,
+//     };
 
-    return res.json({
-        data: existingPost,
-    });
-});
+//     postId[existingPostIndex] = updatedPost;
 
-router.delete("/:id", (req, res) => {
-    const postId = req.params.id;
+//     return res.json({
+//         data: existingPost,
+//     });
+// });
 
-    console.log("Del - postId", postId);
+// router.delete("/:id", (req, res) => {
+//     const postId = req.params.id;
 
-    const existingPost = posts.find((post) => post.id == postId);
+//     console.log("Del - postId", postId);
 
-    if (!existingPost) {
-        return res.json({
-            message: "Post not found",
-        });
-    }
+//     const existingPost = posts.find((post) => post.id == postId);
 
-    const index = posts.indexOf(existingPost);
-    posts.splice(index, 1);
+//     if (!existingPost) {
+//         return res.json({
+//             message: "Post not found",
+//         });
+//     }
 
-    return res.json({
-        message: "Delete post successfully",
-    });
-});
+//     const index = posts.indexOf(existingPost);
+//     posts.splice(index, 1);
+
+//     return res.json({
+//         message: "Delete post successfully",
+//     });
+// });
 
 export default router;
