@@ -1,0 +1,29 @@
+import jwt from "jsonwebtoken";
+
+export const authMDW = (req, res, next) => {
+    const token = req.headers["x-access-token"];
+
+    try {
+        if (!token) {
+            return res.status(401).json({
+                message: "Token is not provinded",
+            });
+        }
+
+        const decode = jwt.verify(token, process.env.SECRET_KEY);
+
+        req.users = decode;
+
+        next();
+    } catch (error) {
+        if (error instanceof jwt.TokenExpiredError) {
+            return res.status(403).json({
+                message: "Token is expired",
+            });
+        }
+
+        return res.status(401).json({
+            message: "Token is not valid",
+        });
+    }
+};
